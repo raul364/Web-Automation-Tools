@@ -406,8 +406,7 @@ class Auto_Login():
     
 
 
-#wait = input("Enter waiting time (seconds) for crawler")
 #user = input("Enter username for login")
 #passwrd = input("Enter password for login")
-#iterate(wait, user, passwrd)
-#Auto_Login('infinitysoftworks3@hotmail.com', 'softworks123',True)
+#stayLoggedIn = input("Enter true or false to stay logged in")
+Auto_Login(user, pass, stayLoggedIn (boolean))
