@@ -32,8 +32,8 @@ chrome_options.add_experimental_option("prefs",prefs)
 #browser = webdriver.Chrome(PATH,chrome_options=chrome_options)
 global browser
 
-def login_to_site(user, passwrd):
-    tmp = open('manualLogin.txt', "w")
+def login_to_site(user, passwrd, file):
+    tmp = open(file, "w")
     tmp.close()
 
     post_login = Auto_Login(user, passwrd, True)
@@ -48,4 +48,4 @@ def login_to_site(user, passwrd):
 
 #user = input("Enter username for login")
 #passwrd = input("Enter password for login")
-login_to_site(user, passwrd)
+login_to_site(user, passwrd, file)
