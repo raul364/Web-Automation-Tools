@@ -9,7 +9,7 @@ Designed to complete and bypass audio Captcha's by utilising Google speech to te
 It will download the audio file, convert the speech to text and return the text.
 You must then implement a way to input the text to the correct field.
 
-HOW TO USE
+HOW TO USE:
 Provide link to the audio file.
 
 <h1>SEngine_Wrapper</h1>
@@ -18,7 +18,7 @@ Will return a cvs file with websites based on search term
 
 MUST PROVIDE PATH TO CHROMEDRIVER IN THE CODE
 
-HOW TO USE
+HOW TO USE:
 provide search term
 number of links you want to gather
 choose between google or bing to search from. (the search engine will be Google Chrome)
@@ -33,7 +33,7 @@ MUST PROVIDE PATH TO CHROMEDRIVER IN THE CODE
 
 HOW TO USE
 import login
-arr = ["]
+arr = ['URLs']
 login.login_to_site("USERNAME1241", "Pa55word!", [array of URLs])
 
 
@@ -69,7 +69,7 @@ done so automatically.
 
 will return a array of websites that accounts were not created for as well as 2 text files. 1 with completed urls
 and 2 with websites that were successful.
-    Typical useage example:
+    HOW TO USE:
     sendString(["https://signup.com/", "https://accounts.google.com/signup?hl=en"]
     OR
     sendFile() - Where the filepath variable on line 68 is changed to locate a .txt file containing URLS OR the filepath is entered in the brackets
