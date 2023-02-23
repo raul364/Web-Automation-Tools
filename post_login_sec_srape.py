@@ -146,10 +146,6 @@ def get_settings(user, passwrd, keyword1, keyword2):
 #passwrd = input("Enter password for login")
 #word1 = input("Enter keyword1")
 #word2 = input("Enter replacement for keyword1")
-get_settings('infinitysoftworks3@hotmail.com', 'softworks123', "verification", "authentication") 
-#get_settings(user, passwrd, word1, word2)
+get_settings(user, passwrd, word1, word2)
 
-#infinitysoftworks3@hotmail.com
-#test.infinitysoftworks333@hotmail.com
-#V3ryStrongP4ssword@!
-#softworks123
+
