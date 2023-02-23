@@ -24,7 +24,7 @@ Edit PATH by adding path to your chrome driver
 typical usage case:
 import login
 arr = ["]
-login.login_to_site("USERNAME1241","Pa55word!",)
+login.login_to_site("USERNAME1241", "Pa55word!", [array of URLs])
 """
 
 
