@@ -17,6 +17,7 @@
 ##################################################################################
 #
 # ----------------------INSTRUCTIONS--------------
+# EDIT PATH by adding path to your chrome driver
 # 1. import this file (from autoLogin import *)
 # 2. call autoLogin and parse username, password, boolean. parse False to give 15 seconds to user to navigate to a certain page.
 # 3. call get_login_page and parse url.
