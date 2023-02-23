@@ -1,0 +1,118 @@
+#!/usr/local/bin/python3
+# DATE DEVELOPED: 2020/11/10
+# Version 2 #added custom user directory and added google docstrings
+# WRITTEN BY: James Hills(Joh5)
+# Date Tested: 2020/12/08
+"""an audio Captcha solver using Google speech cloud API
+
+takes a file link and saves to local computer for file converstion and cleaning checks if file is already there and remove file to avoid bloat first
+converts the file from mp3 to wav (mp3 being standard file format for google audio captcha. however google cloud works best with wav)
+takes the file and adjusts for static and background noise to give best chance of accurate reading
+return string of result from google cloud, 
+
+will return the string and print function once imported
+  Typical usage example:
+  import audio_captcha_solver as acs
+
+  print(acs.main(URL))
+"""
+
+
+##### please install ffmpeg for pydub
+import speech_recognition as sr
+import requests
+import os
+from pydub import AudioSegment
+import cgi
+import cgitb
+cgitb.enable(display=0,logdir='/scripts/data/')
+
+"""downloads audio file from given link
+
+call remove_file() to avoid bloat
+sends a request to the file link with headers open and save the request content
+write the content to an audio file in directory.
+
+Args:
+   file_Link (str): a url string of the get request for audio file
+   directory (str): file path to save file to defaults to /scripts/data for docker version
+
+"""
+def get_captcha(file_link,directory="/scripts/data/"):
+    remove_file(directory) # cleans last file if there is one
+    headers = {'user-agent':'uni-password-test'}
+    r = requests.get(file_link,headers)
+    with open(directory+"cap.mp3",'wb')as audio_file:
+        audio_file.write(r.content)
+
+
+"""convert file from mp3 to wav
+
+find file from directory loads content and converts to .wav format 
+
+Args:
+    directory (str): file path to load file to defaults to /scripts/data for docker version
+
+"""
+def convert_file(directory):
+    file = AudioSegment.from_mp3(directory+"cap.mp3")
+    file.export(directory+"cap.wav",format="wav")
+
+
+"""get string from audio file and return
+
+create speech recognizer and load file from directory
+then adjust the audio file for static for better accuracy chance
+finaly submit to google cloud speech api and return the result
+
+Args:
+    directory (str): file path to load file to defaults to /scripts/data/ for docker version.
+
+Returns:
+    string: text google cloud speech api "heard" from file
+"""
+def get_voice(directory="/scripts/data/"):
+    speech_recognizer = sr.Recognizer()
+    file = sr.AudioFile(directory+"cap.wav")
+    with file as source:
+        speech_recognizer.adjust_for_ambient_noise(source)
+        audio = speech_recognizer.record(source)
+        result = speech_recognizer.recognize_google(audio,language='en')
+    return(result)
+
+""" remove file to save space
+
+try except to remove both cap files (mp3 and wav)
+if it cant then there is likely no file to remove and print stating no file found
+
+Args:
+    directory (str): file path to load file to defaults to /scripts/data for docker version
+
+"""
+def remove_file(directory="/scripts/data/"):
+    try:
+        os.remove(directory+"cap.mp3")
+    except:
+        print("no file found")
+    try:
+        os.remove(directory+"cap.wav")
+    except:
+        print("no file found")
+
+"""main function for running entire pipeline
+
+runs each function with paramters and returns speech from audio file
+
+Args:
+    link (str): url for file to download and test   
+    directory (str): file path to load file to defaults to /scripts/data/ for docker version.
+
+Returns:
+    string: text google cloud speech api "heard" from file
+"""
+def main(link,directory="/scripts/data/"):
+    get_captcha(link,directory)
+    convert_file(directory)
+    #trim_file()
+    string = get_voice(directory)
+    return string
