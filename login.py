@@ -23,7 +23,7 @@ from autoLogin import *
 
 
 # Path to chrome driver
-PATH = 'C:/Users/raul3/Desktop/Computer science/Year 3/chromedriver.exe'
+PATH = 'ENTER PATH TO CHROME DRIVER'
 chrome_options = webdriver.ChromeOptions()
 
 #remove notification alert which blocks interactivity with selenium
@@ -48,5 +48,4 @@ def login_to_site(user, passwrd):
 
 #user = input("Enter username for login")
 #passwrd = input("Enter password for login")
-login_to_site('infinitysoftworks3@hotmail.com', 'softworks123')
-#login_to_site(user, passwrd)
+login_to_site(user, passwrd)
