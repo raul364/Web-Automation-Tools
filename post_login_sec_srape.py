@@ -1,5 +1,6 @@
-# DATE DEVELOPED: 2021/02/019
+# DATE DEVELOPED: 2021/03/28
 # Version 1.2
+# ~ returns arrays instead of files now
 # ~ Added ability to extract DOM of the keyword.
 # ~ Moved login function into its ownn class 
 # ~ Changed security scraping method to involve human intervention to find the correct page
@@ -27,16 +28,23 @@
 # WRITTEN BY: Raul Rasciclal(rr355)
 # Date Tested: 20201/02/19
 # Description: scrape for keyword from logged in website
+"""caller file for AutoLogin.py where it will login and scrape paramters passed on the given page.
 
+Caller file for AutoLogin.py to login a user with username and password over an array of urls and return the urls that failed
+
+Edit PATH by adding path to your chrome driver
+
+typical usage case:
+import post_login_sec_srape
+arr = ["https://www.google.com","https://www.bing.com"]
+post_login_sec_srape.get_settings("USERNAME1241","Pa55word!","secuirty","Account",arr)
+"""
 from selenium import webdriver
-from urllib.request import urlopen
-import time
-from selenium.common import exceptions
-from urllib import parse
-from autoLogin import *
+import time 
+import auto_login 
 
 # Path to chrome driver
-PATH = 'C:/Users/raul3/Desktop/Computer science/Year 3/chromedriver.exe'
+PATH = 'PATH TO CHROME DRIEVR'
 chrome_options = webdriver.ChromeOptions()
 
 #remove notification alert which blocks interactivity with selenium
@@ -46,106 +54,110 @@ chrome_options.add_experimental_option("prefs",prefs)
 global browser
 
 
-# scrape for keywords and export it into a txt file
-def get_settings(user, passwrd, keyword1, keyword2):
+def get_settings(user, passwrd, keyword1, keyword2, stay_loggedin, sites ):
+    """scrape for keywords and export it into a txt file
+
+    logs into passed array of urls indivdualy records whether the array fails
+    logs into site using Username and password values passed to function
+    scrapes the website for a value passed to it once logged in.
+
+    Args:
+        user (str): username to login as 
+        passwrd (str): password to login with
+        keyword1 (str): primary keyword to search for on the webpage
+        keyword2 (str): backup search term to look for on the webpage
+        urls [arr]: array of strings containing urls
+
+    Returns:
+        failed_urls [arr]: array of strings of each url that failed to login for human review.
+        extra_settings[arr]: array of details scraped from the webpage.
+    """
+
+
     # Clear all content of these files
-    tmp = open('xtraSettings.txt', "w")
-    tmp.close()
+    st = stay_loggedin
     
-    post_login = Auto_Login(user, passwrd, False)
-    file =  open('queue.txt')
-    with file:
-        for url in file:
+    extra_settings = []
+
+    failed_urls = []
+    post_login = auto_login.Auto_Login(user, passwrd, False)
+
+
+    if st == False:
+        for url in sites:
             # timer to slow down the loop to see what is happening
             time.sleep(3)
+            
             page = post_login.get_Login_Page(url)
             
-
             # scrape for user defined keywords
             if page[0] == True:
-                global browser; browser = webdriver.Chrome(PATH,chrome_options=chrome_options)
-
+                global browser; browser = webdriver.Chrome(options=chrome_options)
                 url = page[1]
                 browser.get(url)
-
                 # Add Cookies and log in
                 for cookie in page[2]:
                     browser.add_cookie(cookie)
                 browser.get(url)
                 time.sleep(2)
-
                 #~~~~~~~~~~~~~ Start navigating to the page where you want to extract info from~~~~~~~~~~~~~~~~~~~~~~
                 # can extend time based on how long it takes to navigate, currently 15 seconds
                 found_text = []
                 found = False
                 try:
-                    var1 = browser.find_elements_by_xpath("//*[contains(text(), '{}')]".format(keyword1))
+                    body = browser.find_element_by_tag_name("body")
+                    var1 = body.find_elements_by_xpath("//*[contains(text(), '{}')]".format(keyword1))
                     if var1 != None:
                         for phrase in var1:
                             if keyword1 in phrase.text:
-                                xpath = phrase.find_element_by_xpath("..")
-                                found_text.append(xpath.get_attribute("outerHTML"))
+                                a = phrase.find_element_by_xpath("..")
+                                found_text.append(a.get_attribute("outerHTML"))
                                 found = True
                     if found == False:
-                        var2 = browser.find_elements_by_xpath("//*[contains(text(), '{}')]".format(keyword2))
+                        var2 = body.find_elements_by_xpath("//*[contains(text(), '{}')]".format(keyword2))
                         if var2 != None:
                             for phrase in var2:
                                 if keyword2 in phrase.text:
-                                    xpath = phrase.find_element_by_xpath("..")
-                                    found_text.append(xpath.get_attribute("outerHTML"))
+                                    a = phrase.find_element_by_xpath("..")
+                                    found_text.append(a.get_attribute("outerHTML"))
                                     found = True
                 except:
                     pass    
                 
-
                 if found== False:
                     #try iframe if nothing found on normal frame
                     iframe = browser.find_elements_by_tag_name("iframe")
                     for frame in iframe:
                         try:
                             browser.switch_to.frame(frame)
-                            var1 = browser.find_elements_by_xpath("//*[contains(text(), '{}')]".format(keyword1))
+                            body = browser.find_element_by_tag_name("body")
+                            var1 = body.find_elements_by_xpath("//*[contains(text(), '{}')]".format(keyword1))
                             if var1 != None:
                                 for phrase in var1:
                                     if keyword1 in phrase.text:
-                                        xpath = phrase.find_element_by_xpath("..")
-                                        found_text.append(xpath.get_attribute("outerHTML"))
+                                        a = phrase.find_element_by_xpath("..")
+                                        found_text.append(a.get_attribute("outerHTML"))
                                         found = True
                             if found == False:
-                                var2 = browser.find_elements_by_xpath("//*[contains(text(), '{}')]".format(keyword2))
+                                var2 = body.find_elements_by_xpath("//*[contains(text(), '{}')]".format(keyword2))
                                 if var2 != None:
                                     for phrase in var2:
                                         if keyword2 in phrase.text:
-                                            xpath = phrase.find_element_by_xpath("..")
-                                            found_text.append(xpath.get_attribute("outerHTML"))
+                                            a = phrase.find_element_by_xpath("..")
+                                            found_text.append(a.get_attribute("outerHTML"))
                                             found = True
                             browser.switch_to.default_content()
                         except:
                             pass
-      
+                        
                 if found == False:
                     found_text.append("Keyword not found")
- 
-                # Add found security settings to file
-                file = open('xtraSettings.txt', "a", encoding='utf-8')
-                found = set(found_text)
-                with file  as output:
-                    output.write(url+"\n")
-                    for data in found:
-                        output.write(str(data + "\n"))
-                    output.write("\n")
-                    file.close()
+
+                extra_settings.append([url, found_text])
                 browser.close()
 
+            else:
+                failed_urls.append(page[3])
 
 
-
-
-
-#user = input("Enter username for login")
-#passwrd = input("Enter password for login")
-#word1 = input("Enter keyword1")
-#word2 = input("Enter replacement for keyword1")
-get_settings(user, passwrd, word1, word2)
-
-
+    return extra_settings, failed_urls
