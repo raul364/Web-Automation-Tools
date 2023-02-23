@@ -1,5 +1,5 @@
 # Web-Automation & Password security tools
-Tools designed for automating web scrapping, account creation and logging in, CAPTCHA solving, and extracting password policies on the web.
+Tools designed for automating web scrapping, account creation and logging in, CAPTCHA solving, and extracting password policies on the web./n
 
 
 The tools were desguned for Scraping password requirements on large number of websites for cyber security researchers and practioners however, most of the tools are open ended therefore, can be used for any web purposes by tweaking the parameters.
