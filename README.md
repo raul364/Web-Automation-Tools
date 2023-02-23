@@ -36,7 +36,7 @@ provide username and password and txt file
 
 
 <h1>AutoLogin</h1>
-Tool designed to navigate to the login page/ login from the base URL.
+Tool designed to navigate to the login page/ login from the base URL. This tool works in conjuction with Login tool and so it is provoked through Login.py
 This tool is semi-automated. It will give user 15 seconds to manually navigate to the login page to aid the bot in parsing login details. For the difficult webpages.
 The Bot will attempt to navigate to the login page. If it fails there will be a 15 second window whre there is no movement, this is for the user to manually navigate from the current state to the login page... after which the bot will resume control and attempt to login.
 This tool was made semi-automated to increase the success rate of logging in to 95% from base URL.
