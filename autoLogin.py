@@ -40,7 +40,7 @@ from selenium.common import exceptions
 from Captcha import *
 
 # Path to chrome driver
-PATH = 'C:/Users/raul3/Desktop/Computer science/Year 3/chromedriver.exe'
+PATH = 'PATH TO CHROME DRIVER'
 
 # Setup browser to be chrome and accept all notification
 chrome_options = webdriver.ChromeOptions()
